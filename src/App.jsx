@@ -2,34 +2,42 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import OutfitCatalog from './components/OutfitCatalog';
+import CatalogPage from './components/CatalogPage';
 import FloatingClothes from './components/FloatingClothes';
 import CameraCapture from './components/CameraCapture';
+import ManualQuestionnaire from './components/ManualQuestionnaire';
 import { CartProvider } from './contexts/CartContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 function AppContent() {
   const [currentView, setCurrentView] = useState('home');
+  const [analysisResult, setAnalysisResult] = useState(null);
   const [userPreferences, setUserPreferences] = useState(null);
   const [userPrompt, setUserPrompt] = useState('');
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [isQuestionnaireOpen, setIsQuestionnaireOpen] = useState(false);
   const { isAuthenticated } = useAuth();
 
-  const handleStartCamera = () => {
-    setCurrentView('camera');
+  const handleStartAIStyling = () => {
+    setIsCameraOpen(true);
   };
 
-  const handleShowLogin = () => {
-    // This will be handled by the Header component
+  const handleStartManualQuestionnaire = () => {
+    setIsQuestionnaireOpen(true);
   };
 
-  const handleCameraAnalysisComplete = (analysis, preferences, prompt) => {
+  const handleAnalysisComplete = (analysis, preferences, prompt) => {
+    setAnalysisResult(analysis);
     setUserPreferences(preferences);
     setUserPrompt(prompt);
+    setIsCameraOpen(false);
+    setIsQuestionnaireOpen(false);
     setCurrentView('catalog');
   };
 
   const handleBackHome = () => {
     setCurrentView('home');
+    setAnalysisResult(null);
     setUserPreferences(null);
     setUserPrompt('');
   };
@@ -55,26 +63,31 @@ function AppContent() {
           
           {currentView === 'home' && (
             <Hero 
-              onStartCamera={handleStartCamera}
-              onShowLogin={handleShowLogin}
+              onStartAIStyling={handleStartAIStyling}
+              onStartManualQuestionnaire={handleStartManualQuestionnaire}
             />
           )}
           
           {currentView === 'catalog' && userPreferences && (
-            <OutfitCatalog 
+            <CatalogPage 
               preferences={userPreferences}
               prompt={userPrompt}
+              analysisResult={analysisResult}
               onBack={handleBackHome}
             />
           )}
 
-          {currentView === 'camera' && (
-            <CameraCapture
-              isOpen={true}
-              onClose={handleBackHome}
-              onAnalysisComplete={handleCameraAnalysisComplete}
-            />
-          )}
+          <CameraCapture
+            isOpen={isCameraOpen}
+            onClose={() => setIsCameraOpen(false)}
+            onAnalysisComplete={handleAnalysisComplete}
+          />
+
+          <ManualQuestionnaire
+            isOpen={isQuestionnaireOpen}
+            onClose={() => setIsQuestionnaireOpen(false)}
+            onComplete={handleAnalysisComplete}
+          />
         </motion.div>
       </div>
   );

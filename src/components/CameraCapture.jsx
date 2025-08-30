@@ -98,13 +98,12 @@ const CameraCapture = ({ isOpen, onClose, onAnalysisComplete }) => {
     };
 
     onAnalysisComplete(analysisResult, preferences, prompt);
-    handleClose();
   };
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
     handleQuestionnaireComplete();
-  }, [budget, prompt, analysisResult, onAnalysisComplete]);
+  }, [budget, prompt, analysisResult]);
 
   const handleClose = useCallback(() => {
     stopCamera();
