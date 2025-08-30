@@ -101,10 +101,11 @@ const CameraCapture = ({ isOpen, onClose, onAnalysisComplete }) => {
     handleClose();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
     handleQuestionnaireComplete();
-  };
+  }, [budget, prompt, analysisResult, onAnalysisComplete]);
+
   const handleClose = useCallback(() => {
     stopCamera();
     setCapturedImage(null);
@@ -115,6 +116,38 @@ const CameraCapture = ({ isOpen, onClose, onAnalysisComplete }) => {
     setPrompt('');
     onClose();
   }, [stopCamera, onClose]);
+
+  // Helper functions to extract style and occasion from user prompt
+  const extractStyleFromPrompt = (prompt) => {
+    const promptLower = prompt.toLowerCase();
+    if (promptLower.includes('professional') || promptLower.includes('work') || promptLower.includes('office')) {
+      return 'formal';
+    }
+    if (promptLower.includes('party') || promptLower.includes('night') || promptLower.includes('evening')) {
+      return 'edgy';
+    }
+    if (promptLower.includes('boho') || promptLower.includes('bohemian') || promptLower.includes('free')) {
+      return 'boho';
+    }
+    return 'casual'; // default
+  };
+
+  const extractOccasionFromPrompt = (prompt) => {
+    const promptLower = prompt.toLowerCase();
+    if (promptLower.includes('work') || promptLower.includes('office') || promptLower.includes('professional') || promptLower.includes('meeting')) {
+      return 'work';
+    }
+    if (promptLower.includes('party') || promptLower.includes('night') || promptLower.includes('club') || promptLower.includes('event')) {
+      return 'party';
+    }
+    if (promptLower.includes('date') || promptLower.includes('romantic') || promptLower.includes('dinner')) {
+      return 'date';
+    }
+    if (promptLower.includes('vacation') || promptLower.includes('travel') || promptLower.includes('holiday')) {
+      return 'vacation';
+    }
+    return 'casual'; // default
+  };
 
   const handleFileUpload = useCallback((event) => {
     const file = event.target.files?.[0];

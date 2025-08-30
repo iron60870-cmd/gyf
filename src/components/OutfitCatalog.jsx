@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowLeft, Heart, ShoppingBag, Star, Filter } from 'lucide-react';
+import { ArrowLeft, Heart, ShoppingBag, Star, Filter, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { generateOutfitRecommendations } from '../utils/outfitGenerator';
 import { useCart } from '../contexts/CartContext';
@@ -68,8 +68,13 @@ const OutfitCatalog = ({ preferences, prompt, onBack }) => {
               </motion.button>
               <div className="h-6 w-px bg-gray-300" />
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Your Perfect Outfits</h1>
-                <p className="text-gray-600">Curated just for you • {outfits.length} recommendations</p>
+                <div className="flex items-center space-x-2">
+                  <Sparkles className="h-6 w-6 text-yellow-500" />
+                  <h1 className="text-2xl font-bold text-gray-900">Your AI-Curated Outfits</h1>
+                </div>
+                <p className="text-gray-600">
+                  Based on your {preferences.bodyShape} body shape • {preferences.colorTone} undertones • {outfits.length} perfect matches
+                </p>
               </div>
             </div>
             <motion.div 
@@ -83,6 +88,26 @@ const OutfitCatalog = ({ preferences, prompt, onBack }) => {
               </span>
             </motion.div>
           </div>
+          
+          {/* User Prompt Display */}
+          {prompt && (
+            <motion.div 
+              className="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <div className="flex items-start space-x-3">
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Sparkles className="h-4 w-4 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium text-blue-900 mb-1">Your Style Request:</h3>
+                  <p className="text-blue-800 text-sm leading-relaxed">"{prompt}"</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </div>
       </motion.div>
 
@@ -188,12 +213,22 @@ const OutfitCatalog = ({ preferences, prompt, onBack }) => {
                     </div>
                   </div>
 
-                  <p className="text-gray-600 text-sm mb-3">
-                    Perfect for your {preferences.bodyShape} body shape • {preferences.colorTone} undertones
-                  </p>
+                  <div className="mb-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm text-gray-600">Match Score</span>
+                      <div className="bg-green-100 px-2 py-1 rounded-full">
+                        <span className="text-green-800 text-xs font-medium">
+                          {outfit.matchScore}%
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 text-xs">
+                      Perfect for your {preferences.bodyShape} body shape • {preferences.colorTone} undertones
+                    </p>
+                  </div>
                   
                   <p className="text-gray-500 text-xs mb-4">
-                    {outfit.items.length} pieces • Complete look • Fits your ${preferences.budget.replace('-', ' to $')} budget
+                    {outfit.items.length} pieces • Complete look • Budget: {preferences.budget.replace('-', ' to $').replace('under-', 'under $').replace('above-', 'above $')}
                   </p>
 
                   <div className="space-y-3 mb-4">

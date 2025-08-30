@@ -68,11 +68,13 @@ function AppContent() {
             />
           )}
 
-          <CameraCapture
-            isOpen={currentView === 'camera'}
-            onClose={handleBackHome}
-            onAnalysisComplete={handleCameraAnalysisComplete}
-          />
+          {currentView === 'camera' && (
+            <CameraCapture
+              isOpen={true}
+              onClose={handleBackHome}
+              onAnalysisComplete={handleCameraAnalysisComplete}
+            />
+          )}
         </motion.div>
       </div>
   );

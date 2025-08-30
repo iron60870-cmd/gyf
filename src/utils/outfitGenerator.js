@@ -317,10 +317,13 @@ const outfitTemplates = [
 ];
 
 export function generateOutfitRecommendations(preferences, prompt = '') {
+  console.log('Generating recommendations with preferences:', preferences);
+  console.log('User prompt:', prompt);
+  
   // Filter outfit templates based on user preferences
   const relevantTemplates = outfitTemplates.filter(template => {
-    const occasionMatch = template.occasions.includes(preferences.occasion);
-    const styleMatch = template.styles.includes(preferences.style);
+    const occasionMatch = preferences.occasion ? template.occasions.includes(preferences.occasion) : true;
+    const styleMatch = preferences.style ? template.styles.includes(preferences.style) : true;
     return occasionMatch || styleMatch;
   });
 
@@ -334,14 +337,21 @@ export function generateOutfitRecommendations(preferences, prompt = '') {
     const promptMatches = templatesToUse.filter(template => 
       template.name.toLowerCase().includes(promptLower) ||
       template.occasions.some(occ => promptLower.includes(occ)) ||
-      template.styles.some(style => promptLower.includes(style))
+      template.styles.some(style => promptLower.includes(style)) ||
+      promptLower.includes('professional') && template.occasions.includes('work') ||
+      promptLower.includes('casual') && template.occasions.includes('casual') ||
+      promptLower.includes('party') && template.occasions.includes('party') ||
+      promptLower.includes('date') && template.occasions.includes('date')
     );
     if (promptMatches.length > 0) {
       finalTemplates = promptMatches;
     }
   }
 
-  return finalTemplates.map((template, index) => {
+  // Take top 8-12 templates for variety
+  const selectedTemplates = finalTemplates.slice(0, Math.min(12, finalTemplates.length));
+  
+  return selectedTemplates.map((template, index) => {
     const outfitItems = template.items
       .map(itemId => mockOutfitItems.find(item => item.id === itemId))
       .filter(item => item !== undefined);
@@ -352,12 +362,12 @@ export function generateOutfitRecommendations(preferences, prompt = '') {
     let matchScore = 75; // Base score
     
     // Adjust based on occasion match
-    if (template.occasions.includes(preferences.occasion)) {
+    if (preferences.occasion && template.occasions.includes(preferences.occasion)) {
       matchScore += 10;
     }
     
     // Adjust based on style match
-    if (template.styles.includes(preferences.style)) {
+    if (preferences.style && template.styles.includes(preferences.style)) {
       matchScore += 10;
     }
     
@@ -373,6 +383,14 @@ export function generateOutfitRecommendations(preferences, prompt = '') {
       const [minBudget, maxBudget] = budgetRanges[preferences.budget];
       if (totalPrice >= minBudget && totalPrice <= maxBudget) {
         matchScore += 5;
+      }
+    }
+    
+    // Boost score for prompt matches
+    if (prompt && prompt.trim()) {
+      const promptLower = prompt.toLowerCase();
+      if (template.name.toLowerCase().includes(promptLower)) {
+        matchScore += 8;
       }
     }
     
