@@ -8,20 +8,17 @@ const mockLogin = async (credentials) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Simple validation for demo
-  if (credentials.username === 'demo' && credentials.password === 'password') {
-    return {
-      success: true,
-      user: {
-        id: 1,
-        username: credentials.username,
-        email: 'demo@example.com'
-      },
-      token: 'mock-jwt-token'
-    };
-  } else {
-    throw new Error('Invalid username or password');
-  }
+  // Accept any credentials for testing
+  return {
+    success: true,
+    user: {
+      id: 1,
+      username: credentials.username,
+      email: `${credentials.username}@example.com`,
+      firstName: credentials.username
+    },
+    token: 'mock-jwt-token'
+  };
 };
 
 const mockSignup = async (userData) => {
