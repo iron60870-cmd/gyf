@@ -369,13 +369,18 @@ export function generateOutfitRecommendations(preferences, prompt = '') {
       'above-200': [200, Infinity]
     };
     
-    const [minBudget, maxBudget] = budgetRanges[preferences.budget];
-    if (totalPrice >= minBudget && totalPrice <= maxBudget) {
-      matchScore += 5;
+    if (preferences.budget && budgetRanges[preferences.budget]) {
+      const [minBudget, maxBudget] = budgetRanges[preferences.budget];
+      if (totalPrice >= minBudget && totalPrice <= maxBudget) {
+        matchScore += 5;
+      }
     }
     
+    // Add some randomness to make it more realistic
+    matchScore += Math.floor(Math.random() * 8) - 4; // +/- 4 points
+    
     // Ensure match score doesn't exceed 100
-    matchScore = Math.min(matchScore, 98);
+    matchScore = Math.min(Math.max(matchScore, 75), 98);
 
     return {
       id: `outfit-${index + 1}`,

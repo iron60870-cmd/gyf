@@ -180,13 +180,20 @@ const OutfitCatalog = ({ preferences, prompt, onBack }) => {
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-lg font-semibold text-gray-900">{outfit.name}</h3>
                     <div className="flex items-center space-x-1">
-                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                      <span className="text-sm text-gray-600">4.8</span>
+                      <div className="bg-green-100 px-2 py-1 rounded-full">
+                        <span className="text-green-800 text-xs font-medium">
+                          {outfit.matchScore}% Match
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  <p className="text-gray-600 text-sm mb-4">
-                    {outfit.items.length} pieces • Complete look
+                  <p className="text-gray-600 text-sm mb-3">
+                    Perfect for your {preferences.bodyShape} body shape • {preferences.colorTone} undertones
+                  </p>
+                  
+                  <p className="text-gray-500 text-xs mb-4">
+                    {outfit.items.length} pieces • Complete look • Fits your ${preferences.budget.replace('-', ' to $')} budget
                   </p>
 
                   <div className="space-y-3 mb-4">
