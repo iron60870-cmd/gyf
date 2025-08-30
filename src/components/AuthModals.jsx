@@ -3,9 +3,45 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Eye, EyeOff, Mail, Phone, Calendar, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
-// NOTE: This is a placeholder for a real API. In a real application,
-// you would replace these URLs with your actual backend endpoints.
-const API_URL = 'http://localhost:3000/api';
+// Mock API functions for demo purposes
+const mockLogin = async (credentials) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Simple validation for demo
+  if (credentials.username === 'demo' && credentials.password === 'password') {
+    return {
+      success: true,
+      user: {
+        id: 1,
+        username: credentials.username,
+        email: 'demo@example.com'
+      },
+      token: 'mock-jwt-token'
+    };
+  } else {
+    throw new Error('Invalid username or password');
+  }
+};
+
+const mockSignup = async (userData) => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1500));
+  
+  // Simple validation for demo
+  if (userData.email && userData.password) {
+    return {
+      success: true,
+      user: {
+        id: Date.now(),
+        ...userData
+      },
+      token: 'mock-jwt-token'
+    };
+  } else {
+    throw new Error('Please fill in all required fields');
+  }
+};
 
 // --- Helper Components moved to the top level ---
 
@@ -58,7 +94,7 @@ const AuthModals = ({ isLoginOpen, isSignupOpen, onCloseLogin, onCloseSignup, on
   const [error, setError] = useState(null);
   
   const [loginData, setLoginData] = useState({
-    email: '',
+    username: '',
     password: ''
   });
 
@@ -74,7 +110,7 @@ const AuthModals = ({ isLoginOpen, isSignupOpen, onCloseLogin, onCloseSignup, on
 
   // Reset state when modals are closed
   const handleCloseLogin = () => {
-    setLoginData({ email: '', password: '' });
+    setLoginData({ username: '', password: '' });
     setError(null);
     setIsLoading(false);
     onCloseLogin();
@@ -92,22 +128,10 @@ const AuthModals = ({ isLoginOpen, isSignupOpen, onCloseLogin, onCloseSignup, on
     setIsLoading(true);
     setError(null);
     try {
-      // Replace with your actual API endpoint for login
-      const response = await fetch(`${API_URL}/users/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loginData),
-      });
-
-      const data = await response.json();
-
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to login.');
-      }
+      const data = await mockLogin(loginData);
 
       // Handle successful login (e.g., store token, update user context)
-      login(data)
+      login(data);
       console.log('Login successful:', data);
       handleCloseLogin();
       
@@ -124,18 +148,7 @@ const AuthModals = ({ isLoginOpen, isSignupOpen, onCloseLogin, onCloseSignup, on
     setIsLoading(true);
     setError(null);
     try {
-      // Replace with your actual API endpoint for signup
-      const response = await fetch(`${API_URL}/users/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(signupData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to create account.');
-      }
+      const data = await mockSignup(signupData);
       
       // Handle successful signup (e.g., show success message, auto-login)
       console.log('Signup successful:', data);
@@ -178,17 +191,17 @@ const AuthModals = ({ isLoginOpen, isSignupOpen, onCloseLogin, onCloseSignup, on
             <ErrorDisplay message={error} />
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email
+                Username
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
-                  type="email"
-                  name="email"
-                  value={loginData.email}
+                  type="text"
+                  name="username"
+                  value={loginData.username}
                   onChange={handleLoginInputChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your email"
+                  placeholder="Enter your username"
                   required
                 />
               </div>
