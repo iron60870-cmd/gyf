@@ -93,14 +93,18 @@ const CameraCapture = ({ isOpen, onClose, onAnalysisComplete }) => {
       bodyType: analysisResult.bodyType,
       colorTone: analysisResult.colorTone,
       budget: budget,
-      style: 'casual', // Default from AI analysis
-      occasion: 'casual' // Default from AI analysis
+      style: 'casual',
+      occasion: 'casual'
     };
 
     onAnalysisComplete(analysisResult, preferences, prompt);
     handleClose();
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleQuestionnaireComplete();
+  };
   const handleClose = useCallback(() => {
     stopCamera();
     setCapturedImage(null);

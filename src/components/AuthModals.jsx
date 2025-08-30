@@ -178,17 +178,17 @@ const AuthModals = ({ isLoginOpen, isSignupOpen, onCloseLogin, onCloseSignup, on
             <ErrorDisplay message={error} />
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Username
+                Email
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
-                  type="text"
+                  type="email"
                   name="email"
                   value={loginData.email}
                   onChange={handleLoginInputChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your username"
+                  placeholder="Enter your email"
                   required
                 />
               </div>
@@ -337,7 +337,7 @@ const AuthModals = ({ isLoginOpen, isSignupOpen, onCloseLogin, onCloseSignup, on
                 <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type="tel"
-                  name="phoneNumber"
+                  name="PhoneNumber"
                   value={signupData.PhoneNumber}
                   onChange={handleSignupInputChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -352,7 +352,7 @@ const AuthModals = ({ isLoginOpen, isSignupOpen, onCloseLogin, onCloseSignup, on
                 Gender
               </label>
               <select
-                name="gender"
+                name="Gender"
                 value={signupData.Gender}
                 onChange={handleSignupInputChange}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -374,7 +374,7 @@ const AuthModals = ({ isLoginOpen, isSignupOpen, onCloseLogin, onCloseSignup, on
                 <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type="date"
-                  name="dateOfBirth"
+                  name="DOB"
                   value={signupData.DOB}
                   onChange={handleSignupInputChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"

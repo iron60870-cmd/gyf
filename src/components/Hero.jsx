@@ -74,7 +74,7 @@ const Hero = ({ onStartStyling, onStartCamera, onShowLogin }) => {
               ) : (
                 <div className="flex flex-col sm:flex-row gap-4">
                   <motion.button
-                    onClick={onShowLogin}
+                    onClick={() => {}} // This will be handled by Header component
                     className="group bg-red-500 text-white px-8 py-4 rounded-full font-medium hover:bg-red-600 transition-colors flex items-center justify-center space-x-2"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
