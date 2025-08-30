@@ -115,10 +115,6 @@ const CameraCapture = ({ isOpen, onClose, onAnalysisComplete }) => {
     setPrompt('');
     onClose();
   }, [stopCamera, onClose]);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    handleQuestionnaireComplete();
-  };
 
   const handleFileUpload = useCallback((event) => {
     const file = event.target.files?.[0];
